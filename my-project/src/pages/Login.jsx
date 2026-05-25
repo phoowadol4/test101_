@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Swal from 'sweetalert2';
+import Navbar from '../components/Navbar';
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -38,22 +39,20 @@ export default function Login() {
       const data = await response.json();
       console.log("Response data:", data);
 
-      // 3. ตรวจสอบผลลัพธ์จาก API
       if (data.status === "ok") {
         localStorage.setItem("token", data.token);
         
-        await Swal.fire({
-          icon: 'success',
-          title: 'เข้าสู่ระบบสำเร็จ!',
-          text: `ยินดีต้อนรับคุณ ${username}`,
-          confirmButtonColor: '#22c55e',
-          timer: 2000,
-          showConfirmButton: false
-        });
+        // await Swal.fire({
+        //   icon: 'success',
+        //   title: 'เข้าสู่ระบบสำเร็จ!',
+        //   text: `ยินดีต้อนรับคุณ ${username}`,
+        //   confirmButtonColor: '#22c55e',
+        //   timer: 2000,
+        //   showConfirmButton: false
+        // });
 
-        window.location.href = "/dashboard"; // พาไปหน้า Dashboard
+        window.location.href = "/"; // ไปหน้า Dashboard
       } else {
-        // หากรหัสไม่ถูกต้องหรือมีข้อผิดพลาดจากหลังบ้าน
         Swal.fire({
           icon: "error",
           title: "เข้าสู่ระบบไม่สำเร็จ",
@@ -75,57 +74,62 @@ export default function Login() {
   };
 
   return (
-    <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-6 sm:p-8 space-y-4 sm:space-y-6">
-      
-      <div className="text-center">
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">เข้าสู่ระบบ</h1>
-        <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-gray-500">
-          กรุณากรอกข้อมูลของคุณเพื่อดำเนินการต่อ
-        </p>
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <Navbar />
+      <div className="flex-1 flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-6 sm:p-8 space-y-4 sm:space-y-6">
+          
+          <div className="text-center">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">เข้าสู่ระบบ</h1>
+            <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-gray-500">
+              กรุณากรอกข้อมูลของคุณเพื่อดำเนินการต่อ
+            </p>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-4 sm:space-y-5">
+            <div>
+              <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+                Username
+              </label>
+              <input
+                type="text"
+                id="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                disabled={isLoading}
+                className="mt-1 block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm sm:text-base disabled:bg-gray-100"
+                placeholder="กรอกชื่อผู้ใช้งาน"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                Password
+              </label>
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={isLoading}
+                className="mt-1 block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm sm:text-base disabled:bg-gray-100"
+                placeholder="กรอกรหัสผ่าน"
+              />
+            </div>
+
+            <div className="pt-2">
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full flex justify-center py-2.5 sm:py-3 px-4 border border-transparent rounded-lg shadow-md text-sm sm:text-base font-semibold text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors disabled:bg-green-400"
+              >
+                {isLoading ? 'กำลังตรวจสอบ...' : 'เข้าสู่ระบบ'}
+              </button>
+            </div>
+          </form>
+
+        </div>
       </div>
-
-      <form onSubmit={handleLogin} className="space-y-4 sm:space-y-5">
-        <div>
-          <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-            Username
-          </label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            disabled={isLoading}
-            className="mt-1 block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm sm:text-base disabled:bg-gray-100"
-            placeholder="กรอกชื่อผู้ใช้งาน"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            disabled={isLoading}
-            className="mt-1 block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm sm:text-base disabled:bg-gray-100"
-            placeholder="กรอกรหัสผ่าน"
-          />
-        </div>
-
-        <div className="pt-2">
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full flex justify-center py-2.5 sm:py-3 px-4 border border-transparent rounded-lg shadow-md text-sm sm:text-base font-semibold text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors disabled:bg-green-400"
-          >
-            {isLoading ? 'กำลังตรวจสอบ...' : 'เข้าสู่ระบบ'}
-          </button>
-        </div>
-      </form>
-
     </div>
   );
 }
